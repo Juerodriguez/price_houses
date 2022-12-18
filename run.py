@@ -3,6 +3,7 @@ from time import sleep
 from selenium import webdriver
 from bs4 import BeautifulSoup
 from entities import House, HousesResult
+import pdb
 
 BROWSER = webdriver.Firefox()
 BROWSER.implicitly_wait(5)
@@ -14,10 +15,10 @@ def run_searcher():
     sleep(2)
     html_source = BROWSER.page_source
     soup = BeautifulSoup(html_source, 'lxml')
-    soup_list = soup.findAll("div", class_="ui-search-layout__item")
+    soup_list = soup.findAll("li", class_="ui-search-layout__item")
     for soup_element in soup_list:
         prices = soup_element.find(class_="price-tag-fraction").text.replace(".", "")
-        locations = soup_element.find(class_="price-tag-fraction").text
+        locations = soup_element.find(class_="ui-search-item__location").text.split(",")
         obj_house = House(prices, locations)
         houses_list.append(obj_house.__dict__)
 
